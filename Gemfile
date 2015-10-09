@@ -7,6 +7,7 @@ gem 'ember-cli-rails'
 # gem 'rails', :git => 'git://github.com/rails/rails.git'
 
 gem 'activerecord-postgresql-adapter'
+gem 'rails_12factor', group: :production
 
 
 # Gems used only for assets and not required
