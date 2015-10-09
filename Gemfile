@@ -1,12 +1,12 @@
 source 'https://rubygems.org'
 
 gem 'rails', '3.2.18'
-gem "ember-cli-rails"
+gem 'ember-cli-rails'
 
 # Bundle edge Rails instead:
 # gem 'rails', :git => 'git://github.com/rails/rails.git'
 
-#gem 'sqlite3'
+gem 'activerecord-postgresql-adapter'
 
 
 # Gems used only for assets and not required
@@ -36,4 +36,7 @@ gem 'jquery-rails'
 # gem 'capistrano'
 
 # To use debugger
-# gem 'debugger'
+group :development do
+  gem 'sqlite3'
+  gem 'debugger'
+end
