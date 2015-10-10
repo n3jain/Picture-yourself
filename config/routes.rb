@@ -57,4 +57,6 @@ PictureYourself::Application.routes.draw do
   # match ':controller(/:action(/:id))(.:format)'
 
   get 'test_search_courses' => 'lynda_api#test_search_courses'
+  get 'get_skills' => 'SkillCourseMapping#test_get_skills_route'
+  get 'recommendations' => 'SkillCourseMapping#recommended_courses'
 end
