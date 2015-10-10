@@ -3,16 +3,61 @@ class LyndaApiController < ApplicationController
   require "digest"
   require "json"
 
+
+  def test_search_courses
+    skills = params[:skills]
+    skills = [skills] unless skills.kind_of?(Array)
+    search_courses(skills)
+  end
+
   # Given a list of skills, search for Lynda courses
   # and return json course objects
   # 
   # @param [Array<String>] array of strings
-  def search_courses
-    skills = params[:skills]
-    search_for_course(skills)
-    # skills.each do |skill|
-    #   search_for_course(skill)
-    # end
+  def search_courses(skills)    
+    # fetch results
+    results = {}
+    skills.each do |skill|
+       results[skill] = search_for_course(skill)
+    end
+
+
+    # remove any duplicate courses
+    courses_for_skills = {}
+    course_ids = Set.new
+    results.each do |skill, result|
+      courses_for_skills[skill] = []
+      courses = result["Courses"]
+
+      courses.each do |course|
+        id = course["ID"]
+        unless course_ids.include?(id)
+          course_ids << id
+          courses_for_skills[skill] << course
+        end
+      end
+    end
+    
+
+    limit = 10
+    recommended_courses = []
+    skill_index = 0
+    
+    # get list of recommended courses for each skill
+    while recommended_courses.length < limit && !courses_for_skills.empty? do
+      skill_index = skill_index % courses_for_skills.length
+      current_skill = skills[skill_index]
+      courses = courses_for_skills[current_skill]
+      course = courses.shift
+      if course.nil?
+        courses_for_skills.delete(current_skill)
+      else 
+        recommended_courses << course
+      end
+      skill_index += 1
+    end
+
+    render :json => recommended_courses.shuffle
 
   end
 
@@ -49,11 +94,11 @@ class LyndaApiController < ApplicationController
   def search_for_course(query)
     search_url = "/search?"
     search_url += "q=#{query}"
-    search_url += "&product_type=2" #only return Courses
-    search_url += "&filter.includes=Courses.Title,Courses.Description,Courses.ShortDescription,Courses.Tags.Typename,Courses.Tags.Name,Courses.URLs"
+    search_url += "&productType=2" #only return Courses
+    search_url += "&filter.includes=Courses.ID,Courses.Title,Courses.Description,Courses.ShortDescription,Courses.URLs,"
+    search_url += "Courses.Tags.Typename,Courses.Tags.Name"
 
-    results = LyndaApiController.get_json(search_url)
-    render :json => results 
+    LyndaApiController.get_json(search_url)
   end
   
   def self.generate_api_hash(url)
