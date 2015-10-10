@@ -7,7 +7,7 @@ class LyndaApiController < ApplicationController
   # and return json course objects
   # 
   # @param [Array<String>] array of strings
-  def search_courses(skills)
+  def search_courses
     skills = params[:skills]
     search_for_course(skills)
     # skills.each do |skill|
