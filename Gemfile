@@ -5,8 +5,11 @@ gem 'rails', '3.2.18'
 # Bundle edge Rails instead:
 # gem 'rails', :git => 'git://github.com/rails/rails.git'
 
-gem 'activerecord-postgresql-adapter'
-gem 'rails_12factor', group: :production
+gem 'nokogiri'
+group :production do
+  gem 'rails_12factor'
+  gem 'activerecord-postgresql-adapter'
+end
 
 
 # Gems used only for assets and not required
