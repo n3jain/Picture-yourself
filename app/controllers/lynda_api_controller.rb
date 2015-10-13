@@ -14,11 +14,11 @@ class LyndaApiController < ApplicationController
   # and return json course objects
   # 
   # @param [Array<String>] array of strings
-  def search_courses(skills)    
+  def self.search_courses(skills)    
     # fetch results
     results = {}
     skills.each do |skill|
-       results[skill] = search_for_course(skill)
+       results[skill] = self.search_for_course(skill)
     end
 
 
@@ -57,8 +57,21 @@ class LyndaApiController < ApplicationController
       skill_index += 1
     end
 
-    render :json => recommended_courses.shuffle
+    return format(recommended_courses)
 
+  end
+
+  def self.format(courses)
+    result = []
+    courses.each do |course| 
+      result << {
+      :id => course["ID"],
+      :url => course["URLs"]["www.lynda.com"],
+      :title => course["Title"],
+      :description => course["ShortDescription"]
+    }
+    end
+    return result 
   end
 
   
@@ -88,18 +101,22 @@ class LyndaApiController < ApplicationController
 
     json
   end
-  
-  private 
 
-  def search_for_course(query)
+
+  def self.search_for_course(query)
+    search_hash = {
+      "q" => query, 
+      "productType" => 2,
+      "limit" =>  2,
+      "filter.includes" => "Courses.ID,Courses.Title,Courses.ShortDescription,Courses.URLs",
+    }
     search_url = "/search?"
-    search_url += "q=#{query}"
-    search_url += "&productType=2" #only return Courses
-    search_url += "&filter.includes=Courses.ID,Courses.Title,Courses.Description,Courses.ShortDescription,Courses.URLs,"
-    search_url += "Courses.Tags.Typename,Courses.Tags.Name"
+    search_url += search_hash.to_query
 
     LyndaApiController.get_json(search_url)
   end
+
+  private
   
   def self.generate_api_hash(url)
     hash = ""

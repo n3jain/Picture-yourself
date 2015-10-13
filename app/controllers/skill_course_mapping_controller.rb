@@ -6,13 +6,22 @@ class SkillCourseMappingController < ApplicationController
     hash1 = get_profile_skills_for_profile(params[:my_profile])
     hash2 = get_profile_skills_for_profile(params[:wannabe_profile])
     delta = hash2[:skills] - hash1[:skills]
-    render :json => {:skills => delta, :profile_pic1 => hash1[:profile_pic], :profile_pic2 => hash2[:profile_pic]}.to_json
+    # only get courses for first 10 skills
+    delta = delta.slice(0,10)
+    render :json => {
+      :skills => delta, 
+      :profile_pic1 => hash1[:profile_pic], 
+      :profile_pic2 => hash2[:profile_pic],
+      :courses => LyndaApiController.search_courses(delta)
+    }.to_json
+
     # Invoke LyndaAPI to get list of courses for above skills
     # Expected course list
     #course_list = [{:id => 123,
     #                :thumbnail => 'https://cdn.lynda.com/courses/151544-635354833423615985_88x158_thumb.jpg',
     #                :url => 'http://www.lynda.com/Business-Skills-tutorials/Presentation-Fundamentals/151544-2.html',
     #                :title => 'Presentation Fundamentals',
+    #                :description => 'Some description'
     #}]
     #course_list
   end
