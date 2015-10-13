@@ -3,10 +3,10 @@ class SkillCourseMappingController < ApplicationController
 
   def recommended_courses
     # Get Delta of skills from related method
-    skills1 = get_skills_for_profile(params[:my_profile])
-    skills2 = get_skills_for_profile(params[:wannabe_profile])
-    delta = skills2 - skills1
-    render :json => delta.to_json
+    hash1 = get_profile_skills_for_profile(params[:my_profile])
+    hash2 = get_profile_skills_for_profile(params[:wannabe_profile])
+    delta = hash2[:skills] - hash1[:skills]
+    render :json => {:skills => delta, :profile_pic1 => hash1[:profile_pic], :profile_pic2 => hash2[:profile_pic]}.to_json
     # Invoke LyndaAPI to get list of courses for above skills
     # Expected course list
     #course_list = [{:id => 123,
@@ -18,15 +18,23 @@ class SkillCourseMappingController < ApplicationController
   end
 
   # Returns array of skills for a given LI profile
-  def get_skills_for_profile(profile_url)
+  def get_profile_skills_for_profile(profile_url)
     html = Nokogiri::HTML(open(profile_url))
-    html.css('section#skills > ul > li.skill > a > span').collect do |span|
+    skills = html.css('section#skills > ul > li.skill > a > span').collect do |span|
       span.content
     end
+    profile_pic = html.css('section#topcard > div.profile-card > div.profile-picture > a > img').collect do |img|
+      img['data-delayed-url']
+    end
+    {:skills => skills, :profile_pic => profile_pic.first}
+  end
+
+  def get_profile_pics(profile_url)
+
   end
 
   # This is for testing the get_skills_for_profile method
   def test_get_skills_route
-    render :json => get_skills_for_profile(params[:profile_url]).to_json
+    render :json => get_profile_skills_for_profile(params[:profile_url]).to_json
   end
 end
