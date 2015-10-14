@@ -51,7 +51,7 @@ class LyndaApiController < ApplicationController
       course = courses.shift
       if course.nil?
         courses_for_skills.delete(current_skill)
-      else 
+      else
         recommended_courses << course
       end
       skill_index += 1
@@ -64,11 +64,13 @@ class LyndaApiController < ApplicationController
   def self.format(courses)
     result = []
     courses.each do |course| 
+     thumbnail = course["Thumbnails"].find { |t| !t["FullURL"].nil? }
       result << {
       :id => course["ID"],
       :url => course["URLs"]["www.lynda.com"],
       :title => course["Title"],
-      :description => course["ShortDescription"]
+      :description => course["ShortDescription"],
+      :thumbnail => thumbnail["FullURL"]
     }
     end
     return result 
@@ -95,7 +97,8 @@ class LyndaApiController < ApplicationController
 
     begin
       json = JSON.load(response.body)
-    rescue
+    rescue Timeout::Error, StandardError => e
+      Rails.logger.error(e.message)
       json = []
     end
 
@@ -107,8 +110,9 @@ class LyndaApiController < ApplicationController
     search_hash = {
       "q" => query, 
       "productType" => 2,
-      "limit" =>  2,
-      "filter.includes" => "Courses.ID,Courses.Title,Courses.ShortDescription,Courses.URLs",
+      "limit" =>  5,
+      "filter.excludes" => "Facets,Results,Courses.Authors,Videos,PopularTerms,Articles,Playlists,Authors,Suggestions,Courses.Tags",
+      "filter.values" => "Courses.Thumbnails[Width$gte$400,Width$lte$600]"
     }
     search_url = "/search?"
     search_url += search_hash.to_query
