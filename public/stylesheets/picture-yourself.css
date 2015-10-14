@@ -1,0 +1,57 @@
+.main-container {
+    text-align: center;
+}
+
+.main-header {
+    color: cadetblue;
+}
+
+.as-deliminator {
+    font-style: italic;
+    font-size: x-large;
+}
+
+.wannabe-profile,
+.my-profile{
+    border: none;
+    border-bottom-style: groove;
+    margin: 15px 0;
+    width: 50rem;
+    text-align: center;
+}
+
+.go-btn {
+    background-color: cadetblue;
+    border: none;
+    border-radius: 5px;
+    padding: 5px 20px;
+    color: white;
+    font-weight: bold;
+    font-size: large;
+}
+
+.courses-container {
+    margin: 10px;
+    position:   relative;
+    overflow-y: auto;
+}
+
+.course-item {
+    border-bottom: 1px solid black;
+    padding:       12px 0;
+    overflow:      hidden;
+}
+
+.course-item:hover {
+     background-color: wheat;
+ }
+
+.course-thumbnail {
+    float:      left;
+    width:      10%;
+}
+
+.course-title {
+    margin-left:  15%;
+    padding-left: 10px;
+}
