@@ -1,9 +1,22 @@
 .main-container {
     text-align: center;
+    margin: 5%;
+}
+
+.header-container {
+    position: relative;
+    margin-top: 20%
+}
+
+.header-container.move-up {
+    margin-top: 0;
+    -webkit-transition: all 3s ease-in-out;
 }
 
 .main-header {
     color: cadetblue;
+    font-size: 74px;
+    font-family: fantasy;
 }
 
 .as-deliminator {
@@ -11,23 +24,19 @@
     font-size: x-large;
 }
 
-.wannabe-profile,
-.my-profile{
+.profile-thumbnail {
+    margin: 5px 45px 20px 45px;
+    border-radius: 100%;
+    width: 150px;
+    height: 150px;
+}
+
+.wannabe-profile {
     border: none;
     border-bottom-style: groove;
     margin: 15px 0;
     width: 50rem;
     text-align: center;
-}
-
-.go-btn {
-    background-color: cadetblue;
-    border: none;
-    border-radius: 5px;
-    padding: 5px 20px;
-    color: white;
-    font-weight: bold;
-    font-size: large;
 }
 
 .courses-container {
@@ -37,21 +46,58 @@
 }
 
 .course-item {
-    border-bottom: 1px solid black;
+    border-bottom: 1px solid silver;
     padding:       12px 0;
     overflow:      hidden;
+    margin: 0 10%;
 }
 
 .course-item:hover {
-     background-color: wheat;
+     background-color: rgba(138, 184, 186, 0.15);
  }
 
-.course-thumbnail {
-    float:      left;
-    width:      10%;
+.course-link:hover {
+    text-decoration: initial;
 }
 
+.unchecked {
+    float: left;
+    font-size: 35px;
+    padding-top: 35px;
+    color: silver;
+}
+
+.checked {
+    float: left;
+    font-size: 35px;
+    padding-top: 35px;
+    color: rgba(96, 159, 161, 0.75);
+}
+
+.course-thumbnail {
+    float:       left;
+    width:       20%;
+    margin-left: 5%;
+}
+
+.course-info {
+    padding: 0 4% 0 32%;
+    text-align: left;
+}
 .course-title {
-    margin-left:  15%;
-    padding-left: 10px;
+    font-size: large;
+    color: black;
+    font-weight: 500;
+}
+
+.course-description {
+    color: grey;
+    padding-top: 5px;
+}
+
+.course-skill {
+    padding-top: 10px;
+    color: cadetblue;
+    font-weight: 500;
+    font-size: medium;
 }
