@@ -52,6 +52,7 @@ class LyndaApiController < ApplicationController
       if course.nil?
         courses_for_skills.delete(current_skill)
       else
+        course["Skill"] = current_skill
         recommended_courses << course
       end
       skill_index += 1
@@ -70,7 +71,8 @@ class LyndaApiController < ApplicationController
       :url => course["URLs"]["www.lynda.com"],
       :title => course["Title"],
       :description => course["ShortDescription"],
-      :thumbnail => thumbnail["FullURL"]
+      :thumbnail => thumbnail["FullURL"],
+      :skill => course["Skill"]
     }
     end
     return result 
