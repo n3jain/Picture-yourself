@@ -56,7 +56,7 @@ PictureYourself::Application.routes.draw do
   # Note: This route will make all actions in every controller accessible via GET requests.
   # match ':controller(/:action(/:id))(.:format)'
 
-  get 'test_search_courses' => 'lynda_api#test_search_courses'
+  get 'test_search_courses' => 'LyndaApi#test_search_courses'
   get 'get_skills' => 'SkillCourseMapping#test_get_skills_route'
   get 'recommendations' => 'SkillCourseMapping#recommended_courses'
 end

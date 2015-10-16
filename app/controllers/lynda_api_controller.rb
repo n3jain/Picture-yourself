@@ -7,7 +7,7 @@ class LyndaApiController < ApplicationController
   def test_search_courses
     skills = params[:skills]
     skills = [skills] unless skills.kind_of?(Array)
-    search_courses(skills)
+    render :json => LyndaApiController.search_courses(skills)
   end
 
   # Given a list of skills, search for Lynda courses

@@ -1,5 +1,6 @@
 class SkillCourseMappingController < ApplicationController
   require 'open-uri'
+  require 'watir-webdriver'
 
   def recommended_courses
     # Get Delta of skills from related method
@@ -28,13 +29,34 @@ class SkillCourseMappingController < ApplicationController
 
   # Returns array of skills for a given LI profile
   def get_profile_skills_for_profile(profile_url)
-    html = Nokogiri::HTML(open(profile_url))
+    begin
+      html = Nokogiri::HTML(open(profile_url, :read_timeout => 10))
+    rescue Timeout::Error
+      return  {:error => 'Timout!'}
+    end
+    # file = File.open('foo.log', File::WRONLY | File::APPEND | File::CREAT)
+    # # To create new (and to remove old) logfile, add File::CREAT like:
+    # # file = File.open('foo.log', File::WRONLY | File::APPEND | File::CREAT)
+    # logger = Logger.new(file)
+    # logger.info("[NOKOGIRI RESULT]:" + html)
     skills = html.css('section#skills > ul > li.skill > a > span').collect do |span|
       span.content
     end
-    profile_pic = html.css('section#topcard > div.profile-card > div.profile-picture > a > img').collect do |img|
+    if skills.empty?
+      skills = html.css('div#profile-skills > ul > li > span > span> a').collect do |a|
+        a.content
+      end
+    end
+
+    profile_pic = html.css('div.profile-picture > a > img').collect do |img|
       img['data-delayed-url']
     end
+    if profile_pic.empty? || profile_pic.first.nil?
+      profile_pic = html.css('div.profile-picture > a > img').collect do |img|
+        img['src']
+      end
+    end
+
     {:skills => skills, :profile_pic => profile_pic.first}
   end
 
@@ -44,6 +66,6 @@ class SkillCourseMappingController < ApplicationController
 
   # This is for testing the get_skills_for_profile method
   def test_get_skills_route
-    render :json => get_profile_skills_for_profile(params[:profile_url]).to_json
+    render :json => get_profile_skills_for_profile("https://www.linkedin.com/in/marissamayer").to_json
   end
 end
