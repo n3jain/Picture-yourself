@@ -1,6 +1,5 @@
 class SkillCourseMappingController < ApplicationController
   require 'open-uri'
-  require 'watir-webdriver'
 
   def recommended_courses
     # Get Delta of skills from related method
